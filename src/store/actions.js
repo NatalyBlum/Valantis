@@ -1,0 +1,9 @@
+export const PRODUCTSLIST = 'PRODUCTSLIST';
+export const LEAGUES_CALENDAR = 'LEAGUES_CALENDAR';
+export const COUNT = 'COUNT';
+export const GET_ERROR = 'GET_ERROR';
+export const COUNT_LEAGUES = 'COUNT_LEAGUES';
+export const CURRENT_PAGE = 'CURRENT_PAGE';
+export const LEAGUE_MATCHES = 'LEAGUE_MATCHES';
+export const COUNT_LEAGUE_MATCHES = 'COUNT_LEAGUE_MATCHES';
+export const FILTERED_DATA = 'FILTERED_DATA';

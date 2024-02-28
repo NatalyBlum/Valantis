@@ -7,7 +7,7 @@ import moment from 'moment';
 import md5 from 'md5';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { PRODUCTSLIST } from './store/actions';
+import { PRODUCTS_LIST_ID, AUTH, COUNT } from './store/actions';
 
 function getAuth() {
   const date = new Date();
@@ -15,9 +15,19 @@ function getAuth() {
   return md5(`Valantis_${utcDate}`);
 }
 
+function deleteDubleId (data) {
+  const newSet = new Set (data);
+  const newData = Array.from(newSet);
+  return newData;
+}
+
 function App() {
   const dispatch = useDispatch();
   const auth = getAuth();
+  dispatch({
+    type: AUTH,
+    auth: auth,
+  })
   const data = {
           "action": "get_ids",
           // "params": {"offset": 0, "limit": 50}
@@ -31,10 +41,14 @@ function App() {
     })
     .then(response => {
       dispatch({
-        type: PRODUCTSLIST,
-        productsList: response.data.result,
+        type: PRODUCTS_LIST_ID,
+        productsListId: deleteDubleId(response.data.result),
       })
-      console.log(response.data.result.length)
+      dispatch({
+        type: COUNT,
+        count: deleteDubleId(response.data.result).length,
+      })
+      // console.log(typeof(deleteDubleId(response.data.result)))
     })
   }, [])
 

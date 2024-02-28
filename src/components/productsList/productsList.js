@@ -3,6 +3,7 @@ import styles from "./productsList.module.css";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { CURRENT_PAGE_PRODUCTS } from '../../store/actions';
+import PaginationBox from '../paginationBox/paginationBox';
 
 function ProductsList() {
 
@@ -41,38 +42,41 @@ function ProductsList() {
       })
       console.log(response.data.result)
     })
-  }, [ids])
+  }, [ids, currentPage])
 
   return (
-  <div>
-    {
-      currentPageProducts ?
-      <table id="table" className={styles.matchTable}>
-        <thead>
-          <tr>
-            <td> id </td>
-            <td> Название </td>
-            <td> Цена </td>
-            <td> Бренд </td>
-          </tr>
-        </thead>
-        <tbody>
+    <div>
+      <div>
         {
-          currentPageProducts.map((item) => <tr className={styles.string} key={item.id}>
-            <td className={styles.cell}>{ item.id }</td>
-            <td className={styles.cell}>{item.product}</td>
-            <td className={styles.cell}>{ item.price }</td>
-            <td className={styles.cell}>
-              {
-                item.brand ? item.brand : '-'
-              }
-            </td>
-          </tr>
-          )
+          currentPageProducts ?
+          <table id="table" className={styles.matchTable}>
+            <thead>
+              <tr>
+                <td> id </td>
+                <td> Название </td>
+                <td> Цена </td>
+                <td> Бренд </td>
+              </tr>
+            </thead>
+            <tbody>
+            {
+              currentPageProducts.map((item) => <tr className={styles.string} key={item.id}>
+                <td className={styles.cell}>{ item.id }</td>
+                <td className={styles.cell}>{item.product}</td>
+                <td className={styles.cell}>{ item.price }</td>
+                <td className={styles.cell}>
+                  {
+                    item.brand ? item.brand : '-'
+                  }
+                </td>
+              </tr>
+              )
+            }
+            </tbody>
+          </table> : <></>
         }
-        </tbody>
-      </table> : <></>
-      }
+      </div>
+      <PaginationBox />
     </div>
   );
 }

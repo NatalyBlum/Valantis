@@ -30,7 +30,6 @@ function App() {
   })
   const data = {
           "action": "get_ids",
-          // "params": {"offset": 0, "limit": 50}
         }
 
   useEffect(() => {
@@ -48,7 +47,6 @@ function App() {
         type: COUNT,
         count: deleteDubleId(response.data.result).length,
       })
-      // console.log(typeof(deleteDubleId(response.data.result)))
     })
   }, [])
 

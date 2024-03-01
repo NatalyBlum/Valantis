@@ -1,4 +1,4 @@
-import { PRODUCTS_LIST_ID, AUTH, COUNT, CURRENT_PAGE_PRODUCTS, CURRENT_PAGE, PRODUCTS_PER_PAGE } from "./actions";
+import { PRODUCTS_LIST_ID, AUTH, COUNT, CURRENT_PAGE_PRODUCTS, CURRENT_PAGE, FILTERED_ID, FILTERED_DATA, IS_FILTERED } from "./actions";
 
 let initialState = {
   productsListId: [],
@@ -7,6 +7,9 @@ let initialState = {
   currentPageProducts: [],
   currentPage: 1,
   productsPerPage: 50,
+  filteredId: [],
+  filteredData: [],
+  isFiltered: false,
 }
 
 export const productsReducer = (state = initialState, action) => {
@@ -36,11 +39,21 @@ export const productsReducer = (state = initialState, action) => {
         ...state,
         currentPage: action.currentPage,
       }
-    // case PRODUCTS_PER_PAGE:
-    //   return {
-    //     ...state,
-    //     productsPerPage: action.productsPerPage,
-    //   }
+    case FILTERED_ID:
+      return {
+        ...state,
+        filteredId: action.filteredId,
+      }
+    case FILTERED_DATA:
+      return {
+        ...state,
+        filteredData: action.filteredData,
+      }
+    case IS_FILTERED:
+      return {
+        ...state,
+        isFiltered: action.isFiltered,
+      }
     default:
       return state
   }

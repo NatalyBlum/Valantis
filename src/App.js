@@ -48,15 +48,18 @@ function App() {
         count: deleteDubleId(response.data.result).length,
       })
     })
+    // .catch((e) => {
+    //   console.log(e)
+    // })
   }, [])
 
   return (
     <div className={styles.app}>
       <Routes>
-        <Route  path={`/`}
+        <Route  path={'/'}
                 element={<ProductsList />} />
-        <Route  path={'/:id'}
-                element={<Product />} />
+        {/* <Route  path={'/:id'}
+                element={<Product />} /> */}
       </Routes>
     </div>
   );

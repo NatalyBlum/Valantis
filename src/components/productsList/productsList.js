@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from "./productsList.module.css";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { CURRENT_PAGE_PRODUCTS } from '../../store/actions';
+import { CURRENT_PAGE_PRODUCTS, IS_FILTERED } from '../../store/actions';
 import PaginationBox from '../paginationBox/paginationBox';
 import Loader from '../loader/loader';
+import FilterBlock from '../filterBlock/filterBlock';
 
 function ProductsList() {
 
@@ -13,20 +14,35 @@ function ProductsList() {
   const currentPage = useSelector((state) => state.products.currentPage);
   const productsPerPage = useSelector((state) => state.products.productsPerPage);
   const currentPageProducts = useSelector((state) => state.products.currentPageProducts);
-  console.log(currentPageProducts)
+  const isFiltered = useSelector((state) => state.products.isFiltered);
+  const filteredData = useSelector((state) => state.products.filteredData);
   const auth = useSelector((state) => state.products.auth);
+
+  function deleteDuble (data) {
+    let obj= {};
+    let result = [];
+    data.map((item) => {
+      if (obj[item.id]) {
+        obj[item.id] += 1
+      } else {
+        obj[item.id] = 1
+        result.push(item)
+      }
+    })
+    return result
+  }
 
   function getCurrentPageIds (ids) {
     const skip = (currentPage - 1) * productsPerPage;
     if (!ids) {
       return [];
     }
-    const result = ids.slice(skip, skip + productsPerPage - 1);
+    const result = ids.slice(skip, skip + productsPerPage);
     return result;
   }
 
+  const idsCurrentPage = getCurrentPageIds(ids);
   useEffect(() => {
-    const idsCurrentPage = getCurrentPageIds(ids);
     const data = {
       "action": "get_items",
       "params": { "ids": idsCurrentPage }
@@ -40,18 +56,21 @@ function ProductsList() {
     .then(response => {
       dispatch({
         type: CURRENT_PAGE_PRODUCTS,
-        currentPageProducts: response.data.result,
+        currentPageProducts: deleteDuble(response.data.result),
       })
     })
-    .catch((response) => {
-      console.log(response.status)
+    .catch((e) => {
+      console.log(e.code)
     })
-  }, [ids, currentPage])
+  }, [idsCurrentPage]);
+
+  const data = isFiltered ? filteredData : currentPageProducts;
 
   return (
     <div className={styles.listWrap}>
-      { !(currentPageProducts.length === 0) ?
+      { data ?
       <div className={styles.list}>
+        <FilterBlock />
         <div>
           <table id="table" className={styles.matchTable}>
             <thead>
@@ -64,7 +83,7 @@ function ProductsList() {
             </thead>
             <tbody>
             {
-              currentPageProducts.map((item) => <tr className={styles.string} key={item.id}>
+              data.map((item) => <tr className={styles.string} key={item.id}>
                 <td className={`${styles.cell} + ${styles.columnName}`}>{ item.id }</td>
                 <td className={`${styles.cell} + ${styles.columnName}`}>{item.product}</td>
                 <td className={styles.cell}>{ item.price }</td>

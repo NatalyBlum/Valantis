@@ -5,7 +5,7 @@ function Loader() {
 
   return (
     <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg"  x="0px" y="0px"
-      viewBox="0 0 100 100" enable-background="new 0 0 0 0" >
+      viewBox="0 0 100 100">
       <circle fill="blue" stroke="none" cx="6" cy="50" r="6">
         <animate
           attributeName="opacity"

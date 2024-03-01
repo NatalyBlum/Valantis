@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import styles from "./filterBlock.module.css";
-import { FILTERED_ID, FILTERED_DATA, IS_FILTERED } from "../../store/actions";
+import { FILTERED_ID, IS_FILTERED } from "../../store/actions";
 
 function FilterBlock() {
 
@@ -11,7 +11,6 @@ function FilterBlock() {
   const [searchPrice, setSearchPrice] = useState('');
   const [searchBrand, setSearchBrand] = useState('');
   const auth = useSelector((state) => state.products.auth);
-  const filteredId = useSelector((state) => state.products.filteredId);
 
   function getData (searchPrice, searchName, searchBrand) {
     let data;
@@ -57,34 +56,13 @@ function FilterBlock() {
     e.preventDefault();
     const data = getData(searchPrice, searchName, searchBrand);
     load(data)
-    dispatch({
-      type: IS_FILTERED,
-      isFiltered: true,
-    })
-  }
-
-  useEffect(() => {
-    const data = {
-      "action": "get_items",
-      "params": { "ids": filteredId }
+    if (searchPrice !== '' || searchName !== '' || searchBrand !== '') {
+      dispatch({
+        type: IS_FILTERED,
+        isFiltered: true,
+      })
     }
-
-    axios.post('http://api.valantis.store:40000/', data, {
-        headers: {
-          "X-Auth": `${auth}`,
-        }
-      })
-      .then(response => {
-        console.log(response)
-        dispatch({
-          type: FILTERED_DATA,
-          filteredData: response.data.result,
-        })
-      })
-      .catch((e) => {
-        console.log(e.code)
-      })
-  }, [filteredId])
+  }
 
     return (
       <div className={styles.wrapper}>

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import styles from "./productsList.module.css";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { CURRENT_PAGE_PRODUCTS, IS_FILTERED } from '../../store/actions';
+import { CURRENT_PAGE_PRODUCTS, FILTERED_DATA} from '../../store/actions';
 import PaginationBox from '../paginationBox/paginationBox';
 import Loader from '../loader/loader';
 import FilterBlock from '../filterBlock/filterBlock';
@@ -17,6 +17,7 @@ function ProductsList() {
   const isFiltered = useSelector((state) => state.products.isFiltered);
   const filteredData = useSelector((state) => state.products.filteredData);
   const auth = useSelector((state) => state.products.auth);
+  const filteredId = useSelector((state) => state.products.filteredId);
 
   function deleteDuble (data) {
     let obj= {};
@@ -41,11 +42,10 @@ function ProductsList() {
     return result;
   }
 
-  const idsCurrentPage = getCurrentPageIds(ids);
   useEffect(() => {
     const data = {
       "action": "get_items",
-      "params": { "ids": idsCurrentPage }
+      "params": { "ids": getCurrentPageIds(ids) }
     }
 
     axios.post('http://api.valantis.store:40000/', data, {
@@ -54,6 +54,7 @@ function ProductsList() {
       }
     })
     .then(response => {
+      console.log(response)
       dispatch({
         type: CURRENT_PAGE_PRODUCTS,
         currentPageProducts: deleteDuble(response.data.result),
@@ -62,7 +63,29 @@ function ProductsList() {
     .catch((e) => {
       console.log(e.code)
     })
-  }, [idsCurrentPage]);
+  }, [ids, currentPage]);
+
+  useEffect(() => {
+    const data = {
+      "action": "get_items",
+      "params": { "ids": filteredId }
+    }
+
+    axios.post('http://api.valantis.store:40000/', data, {
+        headers: {
+          "X-Auth": `${auth}`,
+        }
+      })
+      .then(response => {
+        dispatch({
+          type: FILTERED_DATA,
+          filteredData: response.data.result,
+        })
+      })
+      .catch((e) => {
+        console.log(e.code)
+      })
+  }, [filteredId])
 
   const data = isFiltered ? filteredData : currentPageProducts;
 
@@ -98,7 +121,7 @@ function ProductsList() {
             </tbody>
           </table>
         </div>
-        <PaginationBox />
+        <PaginationBox count={data.length} />
       </div> : <Loader />
     }
     </div>

@@ -2,10 +2,11 @@ import { useEffect } from 'react';
 import styles from "./productsList.module.css";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import { CURRENT_PAGE_PRODUCTS, FILTERED_DATA} from '../../store/actions';
+import { CURRENT_PAGE_PRODUCTS} from '../../store/actions';
 import PaginationBox from '../paginationBox/paginationBox';
 import Loader from '../loader/loader';
 import FilterBlock from '../filterBlock/filterBlock';
+import Table from '../table/table';
 
 function ProductsList() {
 
@@ -15,7 +16,6 @@ function ProductsList() {
   const productsPerPage = useSelector((state) => state.products.productsPerPage);
   const currentPageProducts = useSelector((state) => state.products.currentPageProducts);
   const isFiltered = useSelector((state) => state.products.isFiltered);
-  const filteredData = useSelector((state) => state.products.filteredData);
   const auth = useSelector((state) => state.products.auth);
   const filteredId = useSelector((state) => state.products.filteredId);
 
@@ -43,18 +43,28 @@ function ProductsList() {
   }
 
   useEffect(() => {
-    const data = {
-      "action": "get_items",
-      "params": { "ids": getCurrentPageIds(ids) }
+
+    let data;
+    if (isFiltered) {
+      data = {
+        "action": "get_items",
+        "params": { "ids": getCurrentPageIds(filteredId) }
+      }
+    } else {
+      data = {
+        "action": "get_items",
+        "params": { "ids": getCurrentPageIds(ids) }
+      }
     }
 
+    // console.log(isFiltered)
     axios.post('http://api.valantis.store:40000/', data, {
       headers: {
         "X-Auth": `${auth}`,
       }
     })
     .then(response => {
-      console.log(response)
+      // console.log(response)
       dispatch({
         type: CURRENT_PAGE_PRODUCTS,
         currentPageProducts: deleteDuble(response.data.result),
@@ -63,67 +73,18 @@ function ProductsList() {
     .catch((e) => {
       console.log(e.code)
     })
-  }, [ids, currentPage]);
-
-  useEffect(() => {
-    const data = {
-      "action": "get_items",
-      "params": { "ids": filteredId }
-    }
-
-    axios.post('http://api.valantis.store:40000/', data, {
-        headers: {
-          "X-Auth": `${auth}`,
-        }
-      })
-      .then(response => {
-        dispatch({
-          type: FILTERED_DATA,
-          filteredData: response.data.result,
-        })
-      })
-      .catch((e) => {
-        console.log(e.code)
-      })
-  }, [filteredId])
-
-  const data = isFiltered ? filteredData : currentPageProducts;
+  }, [ids, currentPage, filteredId]);
 
   return (
     <div className={styles.listWrap}>
-      { data ?
-      <div className={styles.list}>
-        <FilterBlock />
-        <div>
-          <table id="table" className={styles.matchTable}>
-            <thead>
-              <tr>
-                <td className={styles.tableHead}> id </td>
-                <td className={styles.tableHead}> Название </td>
-                <td className={styles.tableHead}> Цена </td>
-                <td className={styles.tableHead}> Бренд </td>
-              </tr>
-            </thead>
-            <tbody>
-            {
-              data.map((item) => <tr className={styles.string} key={item.id}>
-                <td className={`${styles.cell} + ${styles.columnName}`}>{ item.id }</td>
-                <td className={`${styles.cell} + ${styles.columnName}`}>{item.product}</td>
-                <td className={styles.cell}>{ item.price }</td>
-                <td className={styles.cell}>
-                  {
-                    item.brand ? item.brand : '-'
-                  }
-                </td>
-              </tr>
-              )
-            }
-            </tbody>
-          </table>
-        </div>
-        <PaginationBox count={data.length} />
-      </div> : <Loader />
-    }
+      { currentPageProducts.length !== 0 ?
+        <div className={styles.list}>
+          <FilterBlock />
+            {/* <div className={styles.nothing}>По данному запросу ничего не найдено</div>  */}
+          <Table currentPageProducts={currentPageProducts}/>
+          <PaginationBox count={isFiltered? filteredId.length : ids.length} />
+        </div> : <Loader />
+      }
     </div>
   );
 }

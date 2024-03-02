@@ -1,0 +1,47 @@
+.matchTable {
+	width: 100%;
+	margin-bottom: 20px;
+	border: 1px solid #dddddd;
+	border-collapse: collapse;
+}
+
+.cell {
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
+	padding: 5px 25px 5px 25px;
+}
+
+.table tr {
+	font-weight: bold;
+	background: #efefef;
+}
+
+.tableHead {
+  padding: 10px 25px 10px 25px;
+  font-size: 18px;
+}
+
+.columnName {
+  text-align: left;
+}
+
+@media (max-width: 896px) {
+  .matchTable {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .cell {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 414px) {
+  .matchTable {
+    font-size: 8px;
+  }
+
+  .cell {
+    padding: 4px;
+  }
+}

@@ -5,5 +5,4 @@ export const COUNT = 'COUNT';
 export const CURRENT_PAGE_PRODUCTS = 'CURRENT_PAGE_PRODUCTS';
 export const CURRENT_PAGE = 'CURRENT_PAGE';
 export const FILTERED_ID = 'FILTERED_ID';
-export const FILTERED_DATA = 'FILTERED_DATA';
 export const IS_FILTERED = 'IS_FILTERED';

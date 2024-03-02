@@ -13,6 +13,7 @@ function FilterBlock() {
   const auth = useSelector((state) => state.products.auth);
 
   function getData (searchPrice, searchName, searchBrand) {
+    console.log(searchPrice, searchName, searchBrand)
     let data;
     if (searchPrice !== '') {
       data = {
@@ -79,7 +80,11 @@ function FilterBlock() {
               type="text"
               name="searchName"
               className={styles.input}
-              onChange={(e) => setSearchName(e.target.value)}
+              onChange={(e) => {
+                setSearchName(e.target.value);
+                setSearchBrand('');
+                setSearchPrice('')
+              }}
             />
           </label>
           <label htmlFor="price" className={styles.label}>
@@ -91,7 +96,11 @@ function FilterBlock() {
               type="text"
               name="searchPrice"
               className={styles.input}
-              onChange={(e) => setSearchPrice(e.target.value)}
+              onChange={(e) => {
+                setSearchPrice(e.target.value);
+                setSearchName('');
+                setSearchBrand('');
+              }}
             />
           </label>
           <label htmlFor="brand" className={styles.label}>
@@ -103,7 +112,11 @@ function FilterBlock() {
               type="text"
               name="searchBrand"
               className={styles.input}
-              onChange={(e) => setSearchBrand(e.target.value)}
+              onChange={(e) => {
+                setSearchBrand(e.target.value);
+                setSearchPrice('');
+                setSearchName('');
+              }}
             />
           </label>
           <button className={styles.btn} type="submit" onClick={(e) => filteredData(e, searchPrice, searchName, searchBrand)}>Фильтровать</button>

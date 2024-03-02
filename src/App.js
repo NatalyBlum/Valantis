@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ProductsList from './components/productsList/productsList';
-import Product from './components/product/product';
 import styles from './App.module.css';
 import moment from 'moment';
 import md5 from 'md5';
@@ -48,9 +47,9 @@ function App() {
         count: deleteDubleId(response.data.result).length,
       })
     })
-    // .catch((e) => {
-    //   console.log(e)
-    // })
+    .catch((e) => {
+      console.log(e.code)
+    })
   }, [])
 
   return (
@@ -58,8 +57,6 @@ function App() {
       <Routes>
         <Route  path={'/'}
                 element={<ProductsList />} />
-        {/* <Route  path={'/:id'}
-                element={<Product />} /> */}
       </Routes>
     </div>
   );

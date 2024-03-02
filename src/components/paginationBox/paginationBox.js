@@ -9,7 +9,7 @@ function PaginationBox(props) {
 
   const { count } = props;
   const productsPerPage = useSelector((state) => state.products.productsPerPage);
-  const countPage = count / productsPerPage;
+  const countPage = Math.ceil(count / productsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
 
@@ -33,7 +33,6 @@ function PaginationBox(props) {
         )}
         </Container>
       </div>
-
     );
   }
 

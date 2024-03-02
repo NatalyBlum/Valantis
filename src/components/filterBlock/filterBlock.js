@@ -13,26 +13,29 @@ function FilterBlock() {
   const auth = useSelector((state) => state.products.auth);
 
   function getData (searchPrice, searchName, searchBrand) {
-    console.log(searchPrice, searchName, searchBrand)
     let data;
     if (searchPrice !== '') {
       data = {
         "action": "filter",
         "params": {
           "price": Number(searchPrice),
-          "product": searchName,
-          "brand": searchBrand,
         }
-      };
-    } else {
+      }
+    } else if (searchName !== '') {
       data = {
         "action": "filter",
         "params": {
           "product": searchName,
+        }
+      }
+    } else if (searchBrand !== '') {
+      data = {
+        "action": "filter",
+        "params": {
           "brand": searchBrand,
         }
       }
-    };
+    }
     return data;
   }
 
@@ -65,64 +68,77 @@ function FilterBlock() {
     }
   }
 
-    return (
-      <div className={styles.wrapper}>
-        <p className={styles.head}>
-          Фильтровать по:
-        </p>
-        <form className={styles.form}>
-          <label htmlFor="name" className={styles.label}>
-            <span className={styles.descr}>Названию</span>
-            <input
-              id="search-name"
-              placeholder="Введите название"
-              value={searchName}
-              type="text"
-              name="searchName"
-              className={styles.input}
-              onChange={(e) => {
-                setSearchName(e.target.value);
-                setSearchBrand('');
-                setSearchPrice('')
-              }}
-            />
-          </label>
-          <label htmlFor="price" className={styles.label}>
-            <span className={styles.descr}>Цене</span>
-            <input
-              id="search-price"
-              placeholder="Введите цену"
-              value={searchPrice}
-              type="text"
-              name="searchPrice"
-              className={styles.input}
-              onChange={(e) => {
-                setSearchPrice(e.target.value);
-                setSearchName('');
-                setSearchBrand('');
-              }}
-            />
-          </label>
-          <label htmlFor="brand" className={styles.label}>
-            <span className={styles.descr}>Бренду</span>
-            <input
-              id="search-brand"
-              placeholder="Введите бренд"
-              value={searchBrand}
-              type="text"
-              name="searchBrand"
-              className={styles.input}
-              onChange={(e) => {
-                setSearchBrand(e.target.value);
-                setSearchPrice('');
-                setSearchName('');
-              }}
-            />
-          </label>
-          <button className={styles.btn} type="submit" onClick={(e) => filteredData(e, searchPrice, searchName, searchBrand)}>Фильтровать</button>
-        </form>
-      </div>
-    );
+  function reset(e) {
+    e.preventDefault();
+    setSearchName('');
+    setSearchBrand('');
+    setSearchPrice('');
+
+    dispatch({
+      type: IS_FILTERED,
+      isFiltered: false,
+    })
   }
+
+  return (
+    <div className={styles.wrapper}>
+      <p className={styles.head}>
+        Фильтровать по:
+      </p>
+      <form className={styles.form}>
+        <label htmlFor="name" className={styles.label}>
+          <span className={styles.descr}>Названию</span>
+          <input
+            id="search-name"
+            placeholder="Введите название"
+            value={searchName}
+            type="text"
+            name="searchName"
+            className={styles.input}
+            onChange={(e) => {
+              setSearchName(e.target.value);
+              setSearchBrand('');
+              setSearchPrice('')
+            }}
+          />
+        </label>
+        <label htmlFor="price" className={styles.label}>
+          <span className={styles.descr}>Цене</span>
+          <input
+            id="search-price"
+            placeholder="Введите цену"
+            value={searchPrice}
+            type="text"
+            name="searchPrice"
+            className={styles.input}
+            onChange={(e) => {
+              setSearchPrice(e.target.value);
+              setSearchName('');
+              setSearchBrand('');
+            }}
+          />
+        </label>
+        <label htmlFor="brand" className={styles.label}>
+          <span className={styles.descr}>Бренду</span>
+          <input
+            id="search-brand"
+            placeholder="Введите бренд"
+            value={searchBrand}
+            type="text"
+            name="searchBrand"
+            className={styles.input}
+            onChange={(e) => {
+              setSearchBrand(e.target.value);
+              setSearchPrice('');
+              setSearchName('');
+            }}
+          />
+        </label>
+        <button className={styles.btn} type="submit" onClick={(e) => filteredData(e, searchPrice, searchName, searchBrand)}>Фильтровать</button>
+        <button className={styles.btn} type="submit" onClick={(e) => reset(e, searchPrice, searchName, searchBrand)}>Сброс фильтра</button>
+      </form>
+    </div>
+  );
+}
 
   export default FilterBlock;

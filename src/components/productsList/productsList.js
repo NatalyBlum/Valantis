@@ -57,14 +57,12 @@ function ProductsList() {
       }
     }
 
-    // console.log(isFiltered)
     axios.post('http://api.valantis.store:40000/', data, {
       headers: {
         "X-Auth": `${auth}`,
       }
     })
     .then(response => {
-      // console.log(response)
       dispatch({
         type: CURRENT_PAGE_PRODUCTS,
         currentPageProducts: deleteDuble(response.data.result),
@@ -73,7 +71,8 @@ function ProductsList() {
     .catch((e) => {
       console.log(e.code)
     })
-  }, [ids, currentPage, filteredId]);
+
+  }, [ids, currentPage, filteredId, isFiltered]);
 
   return (
     <div className={styles.listWrap}>

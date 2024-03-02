@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import styles from "./productsList.module.css";
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -18,22 +18,23 @@ function ProductsList() {
   const isFiltered = useSelector((state) => state.products.isFiltered);
   const auth = useSelector((state) => state.products.auth);
   const filteredId = useSelector((state) => state.products.filteredId);
+  const [loading, setLoading] = useState(false);
 
   function deleteDuble (data) {
     let obj= {};
     let result = [];
-    data.map((item) => {
+    for (let item of data) {
       if (obj[item.id]) {
         obj[item.id] += 1
       } else {
         obj[item.id] = 1
         result.push(item)
       }
-    })
+    }
     return result
   }
 
-  function getCurrentPageIds (ids) {
+  const getCurrentPageIds = (ids) => {
     const skip = (currentPage - 1) * productsPerPage;
     if (!ids) {
       return [];
@@ -57,31 +58,36 @@ function ProductsList() {
       }
     }
 
+    setLoading(true)
     axios.post('http://api.valantis.store:40000/', data, {
       headers: {
         "X-Auth": `${auth}`,
       }
     })
     .then(response => {
+      setLoading(false);
+      console.log(isFiltered)
       dispatch({
         type: CURRENT_PAGE_PRODUCTS,
         currentPageProducts: deleteDuble(response.data.result),
       })
     })
     .catch((e) => {
+      setLoading(false);
       console.log(e.code)
     })
 
-  }, [ids, currentPage, filteredId, isFiltered]);
+  }, [currentPage, isFiltered, filteredId, ids]);
 
+  console.log(ids.length)
   return (
     <div className={styles.listWrap}>
-      { currentPageProducts.length !== 0 ?
+      { !loading ?
         <div className={styles.list}>
           <FilterBlock />
             {/* <div className={styles.nothing}>По данному запросу ничего не найдено</div>  */}
           <Table currentPageProducts={currentPageProducts}/>
-          <PaginationBox count={isFiltered? filteredId.length : ids.length} />
+          <PaginationBox count={isFiltered ? filteredId.length : ids.length} />
         </div> : <Loader />
       }
     </div>

@@ -12,8 +12,10 @@ function PaginationBox(props) {
   const countPage = Math.ceil(count / productsPerPage);
   const [currentPage, setCurrentPage] = useState(1);
   const dispatch = useDispatch();
+  // console.log('box:', count)
 
   useEffect(() => {
+    // console.log(currentPage)
     dispatch({
       type: CURRENT_PAGE,
       currentPage: currentPage,

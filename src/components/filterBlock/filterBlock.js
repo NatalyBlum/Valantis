@@ -86,7 +86,7 @@ function FilterBlock() {
         Фильтровать по:
       </p>
       <form className={styles.form}>
-        <label htmlFor="name" className={styles.label}>
+        <label htmlFor="search-name" className={styles.label}>
           <span className={styles.descr}>Названию</span>
           <input
             id="search-name"
@@ -102,7 +102,7 @@ function FilterBlock() {
             }}
           />
         </label>
-        <label htmlFor="price" className={styles.label}>
+        <label htmlFor="search-price" className={styles.label}>
           <span className={styles.descr}>Цене</span>
           <input
             id="search-price"
@@ -118,7 +118,7 @@ function FilterBlock() {
             }}
           />
         </label>
-        <label htmlFor="brand" className={styles.label}>
+        <label htmlFor="search-brand" className={styles.label}>
           <span className={styles.descr}>Бренду</span>
           <input
             id="search-brand"

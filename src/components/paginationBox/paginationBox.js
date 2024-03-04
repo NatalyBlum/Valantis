@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import styles from "./paginationBox.module.css";
 import { Container, Pagination } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,17 +9,15 @@ function PaginationBox(props) {
   const { count } = props;
   const productsPerPage = useSelector((state) => state.products.productsPerPage);
   const countPage = Math.ceil(count / productsPerPage);
-  const [currentPage, setCurrentPage] = useState(1);
+  const currentPage = useSelector((state) => state.products.currentPage);
   const dispatch = useDispatch();
-  // console.log('box:', count)
 
-  useEffect(() => {
-    // console.log(currentPage)
+  function setCurrentPage (num) {
     dispatch({
       type: CURRENT_PAGE,
-      currentPage: currentPage,
+      currentPage: num,
     })
-  }, [currentPage, dispatch])
+  }
 
     return (
       <div className={styles.paginationWrap}>

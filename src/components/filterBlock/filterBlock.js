@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import styles from "./filterBlock.module.css";
-import { FILTERED_ID, IS_FILTERED } from "../../store/actions";
+import { CURRENT_PAGE, FILTERED_ID, IS_FILTERED } from "../../store/actions";
 
 function FilterBlock() {
 
@@ -65,6 +65,10 @@ function FilterBlock() {
         type: IS_FILTERED,
         isFiltered: true,
       })
+      dispatch({
+        type: CURRENT_PAGE,
+        currentPage: 1,
+      })
     }
   }
 
@@ -77,6 +81,14 @@ function FilterBlock() {
     dispatch({
       type: IS_FILTERED,
       isFiltered: false,
+    })
+    dispatch({
+      type: CURRENT_PAGE,
+      currentPage: 1,
+    })
+    dispatch({
+      type: FILTERED_ID,
+      filteredId: [],
     })
   }
 

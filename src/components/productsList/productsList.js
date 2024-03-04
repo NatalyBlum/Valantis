@@ -20,6 +20,7 @@ function ProductsList() {
   const filteredId = useSelector((state) => state.products.filteredId);
   const [loading, setLoading] = useState(false);
 
+
   function deleteDuble (data) {
     let obj= {};
     let result = [];
@@ -34,14 +35,14 @@ function ProductsList() {
     return result
   }
 
-  const getCurrentPageIds = (ids) => {
+  const getCurrentPageIds = useCallback((ids) => {
     const skip = (currentPage - 1) * productsPerPage;
     if (!ids) {
       return [];
     }
     const result = ids.slice(skip, skip + productsPerPage);
     return result;
-  }
+  }, [currentPage, productsPerPage])
 
   useEffect(() => {
 
@@ -66,7 +67,6 @@ function ProductsList() {
     })
     .then(response => {
       setLoading(false);
-      console.log(isFiltered)
       dispatch({
         type: CURRENT_PAGE_PRODUCTS,
         currentPageProducts: deleteDuble(response.data.result),
@@ -77,15 +77,13 @@ function ProductsList() {
       console.log(e.code)
     })
 
-  }, [currentPage, isFiltered, filteredId, ids]);
+  }, [currentPage, filteredId, ids]);
 
-  console.log(ids.length)
   return (
     <div className={styles.listWrap}>
       { !loading ?
         <div className={styles.list}>
           <FilterBlock />
-            {/* <div className={styles.nothing}>По данному запросу ничего не найдено</div>  */}
           <Table currentPageProducts={currentPageProducts}/>
           <PaginationBox count={isFiltered ? filteredId.length : ids.length} />
         </div> : <Loader />

@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import styles from "./productsList.module.css";
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 import { useDispatch, useSelector } from 'react-redux';
 import { CURRENT_PAGE_PRODUCTS} from '../../store/actions';
 import PaginationBox from '../paginationBox/paginationBox';
@@ -65,17 +66,18 @@ function ProductsList() {
         "X-Auth": `${auth}`,
       }
     })
-    .then(response => {
-      setLoading(false);
-      dispatch({
-        type: CURRENT_PAGE_PRODUCTS,
-        currentPageProducts: deleteDuble(response.data.result),
+      .then(response => {
+        setLoading(false);
+        dispatch({
+          type: CURRENT_PAGE_PRODUCTS,
+          currentPageProducts: deleteDuble(response.data.result),
+        })
       })
-    })
-    .catch((e) => {
-      setLoading(false);
-      console.log(e.code)
-    })
+      .catch((e) => {
+        setLoading(false);
+        console.log(e.code)
+      })
+      axiosRetry(axios, { retries: 4 });
 
   }, [currentPage, filteredId, ids]);
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 import styles from "./filterBlock.module.css";
 import { CURRENT_PAGE, FILTERED_ID, IS_FILTERED } from "../../store/actions";
 
@@ -40,11 +41,12 @@ function FilterBlock() {
   }
 
   function load (data) {
+    axiosRetry(axios, { retries: 4 });
     axios.post('http://api.valantis.store:40000/', data, {
-        headers: {
-          "X-Auth": `${auth}`,
-        }
-      })
+      headers: {
+        "X-Auth": `${auth}`,
+      }
+    })
       .then(response => {
         dispatch({
           type: FILTERED_ID,

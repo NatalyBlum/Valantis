@@ -1,6 +1,5 @@
 import styles from "./loader.module.css";
 
-
 function Loader() {
 
   return (

@@ -5,14 +5,3 @@
 .nothing {
   padding: 20px;
 }
-
-@media (max-width: 896px) {
-  .matchTable {
-    padding: 10px;
-    font-size: 16px;
-  }
-
-  .cell {
-    padding: 10px;
-  }
-}

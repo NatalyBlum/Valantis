@@ -3,7 +3,7 @@ import styles from "./productsList.module.css";
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import { useDispatch, useSelector } from 'react-redux';
-import { CURRENT_PAGE_PRODUCTS} from '../../store/actions';
+import { CURRENT_PAGE_PRODUCTS } from '../../store/actions';
 import PaginationBox from '../paginationBox/paginationBox';
 import Loader from '../loader/loader';
 import FilterBlock from '../filterBlock/filterBlock';
@@ -20,7 +20,6 @@ function ProductsList() {
   const auth = useSelector((state) => state.products.auth);
   const filteredId = useSelector((state) => state.products.filteredId);
   const [loading, setLoading] = useState(false);
-
 
   function deleteDuble (data) {
     let obj= {};
@@ -61,6 +60,7 @@ function ProductsList() {
     }
 
     setLoading(true)
+    axiosRetry(axios, { retries: 4 });
     axios.post('http://api.valantis.store:40000/', data, {
       headers: {
         "X-Auth": `${auth}`,
@@ -77,8 +77,6 @@ function ProductsList() {
         setLoading(false);
         console.log(e.code)
       })
-      axiosRetry(axios, { retries: 4 });
-
   }, [currentPage, filteredId, ids]);
 
   return (

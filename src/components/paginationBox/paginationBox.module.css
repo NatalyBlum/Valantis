@@ -4,10 +4,3 @@
   margin: 0;
   list-style-type: none;
 }
-
-@media (max-width: 414px) {
-  .css-1oqqzyl-MuiContainer-root {
-    padding-left: 0;
-    padding-right: 0;
-  }
-}

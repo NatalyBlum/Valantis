@@ -6,6 +6,7 @@ import moment from 'moment';
 import md5 from 'md5';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import axiosRetry from 'axios-retry';
 import { PRODUCTS_LIST_ID, AUTH, COUNT } from './store/actions';
 
 function getAuth() {
@@ -32,6 +33,7 @@ function App() {
         }
 
   useEffect(() => {
+    axiosRetry(axios, { retries: 4 });
     axios.post('http://api.valantis.store:40000/', data, {
       headers: {
         "X-Auth": `${auth}`,

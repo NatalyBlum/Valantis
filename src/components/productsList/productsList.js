@@ -61,7 +61,7 @@ function ProductsList() {
 
     setLoading(true)
     axiosRetry(axios, { retries: 4 });
-    axios.post('http://api.valantis.store:40000/', data, {
+    axios.post('https://api.valantis.store:41000/', data, {
       headers: {
         "X-Auth": `${auth}`,
       }

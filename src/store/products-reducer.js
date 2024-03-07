@@ -13,7 +13,6 @@ let initialState = {
 }
 
 export const productsReducer = (state = initialState, action) => {
-  console.log(action.type)
   switch(action.type) {
     case PRODUCTS_LIST_ID:
       return {

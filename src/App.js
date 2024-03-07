@@ -33,7 +33,13 @@ function App() {
         }
 
   useEffect(() => {
-    axiosRetry(axios, { retries: 4 });
+    axiosRetry(axios, {
+      retries: 3,
+      retryCondition: (e) => {
+        console.log(e.response.status)
+        return true
+      },
+    });
     axios.post('https://api.valantis.store:41000/', data, {
       headers: {
         "X-Auth": `${auth}`,

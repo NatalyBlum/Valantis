@@ -67,11 +67,12 @@ function ProductsList() {
         return true
       },
     });
-    axios.post('https://api.valantis.store:41000/', data, {
+    if (ids.length !== 0) {
+      axios.post('https://api.valantis.store:41000/', data, {
       headers: {
         "X-Auth": `${auth}`,
       }
-    })
+      })
       .then(response => {
         setLoading(false);
         dispatch({
@@ -83,6 +84,7 @@ function ProductsList() {
         setLoading(false);
         console.log(e.code)
       })
+    }
   }, [currentPage, filteredId, ids]);
 
   return (

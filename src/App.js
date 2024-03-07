@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import ProductsList from './components/productsList/productsList';
 import styles from './App.module.css';
 import moment from 'moment';
@@ -63,8 +63,10 @@ function App() {
   return (
     <div className={styles.app}>
       <Routes>
-        <Route  path={'/'}
-                element={<ProductsList />} />
+        {/* <Route  path={'/'}
+                element={<ProductsList />} /> */}
+        <Route path="/productsList" element={<ProductsList />} />
+        <Route path="/" element={<Navigate replace to="/productsList" />} />
       </Routes>
     </div>
   );

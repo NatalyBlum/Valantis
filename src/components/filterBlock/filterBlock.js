@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import styles from "./filterBlock.module.css";
@@ -11,6 +12,8 @@ function FilterBlock() {
   const [searchName, setSearchName] = useState('');
   const [searchPrice, setSearchPrice] = useState('');
   const [searchBrand, setSearchBrand] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isFiltered = useSelector((state) => state.products.isFiltered);
   const auth = useSelector((state) => state.products.auth);
 
   function getData (searchPrice, searchName, searchBrand) {
@@ -37,8 +40,41 @@ function FilterBlock() {
         }
       }
     }
+    setURL(searchPrice, searchName, searchBrand);
     return data;
   }
+
+  function setURL (searchPrice, searchName, searchBrand) {
+    if (searchPrice !== '') {
+      setSearchParams((params) => {
+        params.delete('brand');
+        params.delete('product');
+        return { price: `${searchPrice}` }
+      });
+    } else if (searchName !== '') {
+      setSearchParams((params) => {
+        params.delete('brand');
+        params.delete('price');
+        return { product: `${searchName}` }
+      });
+    } else if (searchBrand !== '') {
+      setSearchParams((params) => {
+        params.delete('price');
+        params.delete('product');
+        return { brand: `${searchBrand}` }
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (!isFiltered) {
+      setSearchParams((params) => {
+        params.delete('price');
+        params.delete('product');
+        params.delete('brand');
+      });
+    }
+  }, [isFiltered])
 
   function load (data) {
     axiosRetry(axios, {
@@ -98,6 +134,12 @@ function FilterBlock() {
       type: FILTERED_ID,
       filteredId: [],
     })
+    setSearchParams((params) => {
+      params.delete('brand');
+      params.delete('price');
+      params.delete('product');
+      return params;
+    });
   }
 
   return (
